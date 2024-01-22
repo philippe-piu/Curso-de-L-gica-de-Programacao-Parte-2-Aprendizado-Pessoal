@@ -1,5 +1,6 @@
 //Variáveis
 let numeroScreto = gerarNumeroAleatorio();
+let tentativas = 1;
 
  /*Criação de uma variável para armazenar a referência a um elemento HTML usando o método querySelectortg h1
  A propiedade innerHTML permite modificar o conteudo do html selecionado com document.querySelector('h1')
@@ -14,15 +15,58 @@ function exibirTextoNaTela(tag, texto){
   campo.innerHTML = texto;
 }
 
-//Armazenando na função as suas tags com suas mensagens
-exibirTextoNaTela('h1', 'Jogo do número secreto'
-);
-exibirTextoNaTela('p', 'Escolha um número entre 1 e 100');
+//Função de exibição da mensagem inicial do jogo
+function exibirMensagemInicial(){
+  //Armazenando na função as suas tags com suas mensagens
+  exibirTextoNaTela('h1', 'Jogo do número secreto');
+  exibirTextoNaTela('p', 'Escolha um número entre 1 e 100');
+}
+
+//Chamada da função para exibir mensagem inial
+exibirMensagemInicial();
+
 
 //Criando uma função com a ação do onclick="verificarChute()" definido no html
 function verificarChute(){
+  //capturo o número informado pelo o usuario na tag input pegando seu valor ex: let chuteUsuario = document.querySelector('input').value;
   let chuteUsuario = document.querySelector('input').value;
-  console.log(chuteUsuario == numeroScreto);
+  if(chuteUsuario == numeroScreto){
+    exibirTextoNaTela('h1', 'Acertou!!!!!!');
+    let palavraTentativas = tentativas > 1 ? 'tentativas' : 'tentativa';
+    let mensagemTentativas =`Você descobriu o número secreto em ${tentativas} ${palavraTentativas}!`;
+    exibirTextoNaTela('p', mensagemTentativas);
+
+    //Abilitar botão de reinicio do jogo 
+    /*Quando o usuario acerta o número secreto ele abilita  o botão de novo jogo
+    para isso eu pego o document como eu quero que seja algo expecifico do botão pego o id  então coloco getElementByID passo o nome nessa identificação e coloco para remover o atributo que que está dentro do botão no html removeAttribute('disabled') ex:document.getElementById('reiniciar').removeAttribute('disabled');
+    */
+    document.getElementById('reiniciar').removeAttribute('disabled');
+  }else{
+    if(chuteUsuario > numeroScreto){
+      exibirTextoNaTela('p', 'O número secreto é menor');
+    }else{
+      exibirTextoNaTela('p', 'O número secreto é maior');
+    }
+    tentativas++;
+    liparCampo();
+  }
+  
+}
+
+//Função de reinicar o jogo com o botão novo jogo
+function reinicarJogo(){
+  numeroScreto = gerarNumeroAleatorio();
+  liparCampo();
+  tentativas = 1;
+  exibirMensagemInicial();
+  // Desabilita o botão de novo jogo quando começa um novo jogo na página, atribuindo o atributo 'disabled' com o valor 'true'.
+  document.getElementById('reiniciar').setAttribute('disabled', true);
+}
+
+//Limpar a tela
+function liparCampo(){
+  chuteUsuario = document.querySelector('input');
+  chuteUsuario.value = '';
 }
 
 //Função de Geração de número Secreto
