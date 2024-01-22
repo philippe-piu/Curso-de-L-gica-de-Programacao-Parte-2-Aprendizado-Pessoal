@@ -1,4 +1,6 @@
 //Variáveis
+let listaDeNumeroSorteados = [];
+let numeroLimite = 10;
 let numeroScreto = gerarNumeroAleatorio();
 let tentativas = 1;
 
@@ -13,13 +15,15 @@ onde eu passo os parâmetros e depois eu chamo ela mostrando o qual a tag e otex
 function exibirTextoNaTela(tag, texto){
   let campo = document.querySelector(tag);
   campo.innerHTML = texto;
+  //Aproveitando o importe do responsiveVoice para falar o que está escrito na tela 
+  responsiveVoice.speak(texto, 'Brazilian Portuguese Female', {rate:1.2});
 }
 
 //Função de exibição da mensagem inicial do jogo
 function exibirMensagemInicial(){
   //Armazenando na função as suas tags com suas mensagens
   exibirTextoNaTela('h1', 'Jogo do número secreto');
-  exibirTextoNaTela('p', 'Escolha um número entre 1 e 100');
+  exibirTextoNaTela('p', 'Escolha um número entre 1 e 10');
 }
 
 //Chamada da função para exibir mensagem inial
@@ -69,9 +73,27 @@ function liparCampo(){
   chuteUsuario.value = '';
 }
 
-//Função de Geração de número Secreto
+// Função para gerar um número aleatório e garantir que não seja repetido
 function gerarNumeroAleatorio(){
-  /*Função com retorno sem parâmetro */
-  return parseInt(Math.random() * 100 + 1);
-}
+  
+  // Gera um número aleatório entre 1 e numeroLimite (incluindo 1 e excluindo numeroLimite)
+  let numeroEscolhido = parseInt(Math.random() * numeroLimite + 1);
 
+  // Obtém a quantidade atual de elementos na lista de números sorteados
+  let quantidadeDeElementosDeUmaLista = listaDeNumeroSorteados.length;
+
+  // Se a lista estiver cheia, esvazia a lista para começar de novo
+  if(quantidadeDeElementosDeUmaLista == numeroLimite){
+    listaDeNumeroSorteados = [];
+  }
+
+  // Se o número gerado já estiver na lista, chama a função recursivamente para gerar outro número
+  if(listaDeNumeroSorteados.includes(numeroEscolhido)){
+    return gerarNumeroAleatorio();
+  }else{
+    // Se o número não estiver na lista, adiciona à lista, exibe a lista no console e retorna o número
+    listaDeNumeroSorteados.push(numeroEscolhido);
+    console.log(listaDeNumeroSorteados);
+    return numeroEscolhido;
+  }
+}
